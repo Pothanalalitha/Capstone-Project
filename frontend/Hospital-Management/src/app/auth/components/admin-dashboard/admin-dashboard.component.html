@@ -1,0 +1,114 @@
+<div class="admin-dashboard-container">
+  <nav class="sidebar">
+    <ul>
+      <li (click)="onDoctorsInfoClick()">🩺 Doctors Info</li>
+      <li (click)="selectView('patients')">👥 Patients Info</li>
+      <li (click)="selectView('appointments')">📅 Appointments Info</li>
+      <li (click)="selectView('billing')">💳 Billing Info</li>
+    </ul>
+  </nav>
+
+  <section class="content">
+    <h2>{{ currentViewTitle }}</h2>
+    
+    <table *ngIf="currentView === 'doctors'">
+      <thead>
+        <tr><th>Name</th><th>Specialty</th><th>Email</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let doc of doctors">
+          <td>{{ doc.name }}</td>
+          <td>{{ doc.specialty }}</td>
+          <td>{{ doc.email }}</td>
+          <td>
+            <button (click)="editDoctor(doc)">✏️</button>
+            <button (click)="deleteDoctor(doc)">🗑️</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table *ngIf="currentView === 'patients'">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Address</th>
+          <th>Gender</th>
+          <th>DOB</th>
+          <th>Weight</th>
+          <th>Height</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let patient of patients">
+          <td>{{ patient.name }}</td>
+          <td>{{ patient.address }}</td>
+          <td>{{ patient.gender }}</td>
+          <td>{{ patient.dob | date:'yyyy-MM-dd' }}</td>
+          <td>{{ patient.weight }}</td>
+          <td>{{ patient.height }}</td>
+          <td>
+            <button (click)="editPatient(patient)">✏️</button>
+            <button (click)="deletePatient(patient)">🗑️</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table *ngIf="currentView === 'appointments'">
+      <thead>
+        <tr>
+          <th>Patient ID</th>
+          <th>Doctor ID</th>
+          <th>Appointment Time</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let appointment of appointments">
+          <td>{{ appointment.patientId }}</td>
+          <td>{{ appointment.doctorId }}</td>
+          <td>{{ appointment.appointmentTime | date:'medium' }}</td>
+          <td>{{ appointment.status }}</td>
+          <td>
+            <button (click)="editAppointment(appointment)">✏️</button>
+            <button (click)="deleteAppointment(appointment)">🗑️</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table *ngIf="currentView === 'billing'">
+      <thead>
+        <tr>
+          <th>Invoice ID</th>
+          <th>Appointment ID</th>
+          <th>Patient ID</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Created At</th>
+          <th>Updated At</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let bill of bills">
+          <td>{{ bill.id }}</td>
+          <td>{{ bill.appointmentId }}</td>
+          <td>{{ bill.patientId }}</td>
+          <td>{{ bill.amount }}</td>
+          <td>{{ bill.status }}</td>
+          <td>{{ bill.createdAt | date:'medium' }}</td>
+          <td>{{ bill.updatedAt | date:'medium' }}</td>
+          <td>
+            <button (click)="editBilling(bill)">✏️</button>
+            <button (click)="deleteBilling(bill)">🗑️</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </section>
+</div>

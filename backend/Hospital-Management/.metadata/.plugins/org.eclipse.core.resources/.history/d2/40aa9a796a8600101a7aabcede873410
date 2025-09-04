@@ -1,0 +1,5 @@
+package com.example.springs.entity;
+
+public class AuditLog {
+
+}

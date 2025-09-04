@@ -1,0 +1,126 @@
+.auth-card {
+  display: flex;
+  max-width: 900px;
+  margin: 40px auto;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+}
+
+.image-panel {
+  flex: 1;
+  background-color: #2a5daa;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 30px;
+  justify-content: center;
+}
+
+.image-panel img {
+  width: 100%;
+  max-width: 320px;
+  border-radius: 10px;
+  margin-bottom: 25px;
+}
+
+.branding-text h2 {
+  margin: 0 0 12px 0;
+  font-weight: bold;
+  font-size: 1.6rem;
+}
+
+.branding-text p {
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.form-panel {
+  flex: 1;
+  padding: 40px 50px;
+  background: white;
+}
+
+h2 {
+  margin-bottom: 30px;
+  font-weight: 700;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+}
+
+input:focus,
+select:focus {
+  border-color: #2a5daa;
+  outline: none;
+}
+
+.error {
+  color: #e53935;
+  font-size: 0.85rem;
+  margin-top: 5px;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  font-size: 1.1rem;
+  background-color: #2a5daa;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-weight: 600;
+}
+
+button[disabled] {
+  background-color: #9bb8cd;
+  cursor: not-allowed;
+}
+
+button:hover:not([disabled]) {
+  background-color: #224e85;
+}
+
+.error-message {
+  margin-top: 15px;
+  color: #e53935;
+  font-weight: 700;
+  text-align: center;
+}
+
+.mt-3 {
+  margin-top: 1rem;
+}
+
+a {
+  color: #2a5daa;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+a:hover {
+  text-decoration: underline;
+}

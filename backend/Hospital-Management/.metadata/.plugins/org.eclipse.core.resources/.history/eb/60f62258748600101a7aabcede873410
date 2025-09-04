@@ -1,0 +1,7 @@
+package com.example.wipro.lalitha.Service;
+
+import com.example.wipro.lalitha.Logs.AuditLog;
+
+public interface  Auditserivce {
+	AuditLog saveAuditLog(AuditLog auditLog);
+}

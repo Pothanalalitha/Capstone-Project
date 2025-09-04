@@ -1,0 +1,118 @@
+package com.example.wipro.lalitha.dto;
+
+
+
+import java.time.LocalDate;
+import java.util.List;
+
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+
+public class PatientRequestDTO {
+
+    @NotBlank
+    @Size(max = 100)
+    private String name;
+
+    @NotBlank
+    @Size(max = 255)
+    private String address;
+
+    @NotBlank
+    @Pattern(regexp = "Male|Female|Other")
+    private String gender;
+
+    @NotNull
+    @Past
+    private LocalDate dob;
+
+    @NotNull
+    @DecimalMin("0.1")
+    private Double weight;
+
+    @NotNull
+    @DecimalMin("0.1")
+    private Double height;
+
+   
+    private List<MedicalRecordDTO> medicalRecords;
+
+    public PatientRequestDTO() {
+        super();
+    }
+
+    public PatientRequestDTO(String name, String address, String gender, LocalDate dob,
+                             Double weight, Double height,
+                             List<MedicalRecordDTO> medicalRecords) {
+        this.name = name;
+        this.address = address;
+        this.gender = gender;
+        this.dob = dob;
+        this.weight = weight;
+        this.height = height;
+        this.medicalRecords = medicalRecords;
+    }
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public LocalDate getDob() {
+		return dob;
+	}
+
+	public void setDob(LocalDate dob) {
+		this.dob = dob;
+	}
+
+	public Double getWeight() {
+		return weight;
+	}
+
+	public void setWeight(Double weight) {
+		this.weight = weight;
+	}
+
+	public Double getHeight() {
+		return height;
+	}
+
+	public void setHeight(Double height) {
+		this.height = height;
+	}
+
+	public List<MedicalRecordDTO> getMedicalRecords() {
+		return medicalRecords;
+	}
+
+	public void setMedicalRecords(List<MedicalRecordDTO> medicalRecords) {
+		this.medicalRecords = medicalRecords;
+	}
+
+  
+
+}

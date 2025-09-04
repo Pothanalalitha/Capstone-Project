@@ -1,0 +1,52 @@
+package com.example.wipro.lalitha.mapper;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import com.example.wipro.lalitha.dto.MedicalRecordDTO;
+import com.example.wipro.lalitha.entites.MedicalRecord;
+import com.example.wipro.lalitha.entites.Medicine;
+
+public class MedicalRecordMapper {
+
+    public static MedicalRecordDTO toDTO(MedicalRecord record) {
+        if (record == null) return null;
+        MedicalRecordDTO dto = new MedicalRecordDTO();
+        dto.setId(record.getId());
+        dto.setDescription(record.getDescription());
+        dto.setIssue(record.getIssue());
+        dto.setDoctorName(record.getDoctorName());
+        dto.setTreatedAt(record.getTreatedAt());
+        dto.setRevisitDate(record.getRevisitDate());
+        dto.setMedicines(
+            record.getMedicines()
+                .stream()
+                .map(MedicineMapper::toDTO)
+                .collect(Collectors.toList())
+        );
+        return dto;
+    }
+
+    public static MedicalRecord toEntity(MedicalRecordDTO dto) {
+        if (dto == null) return null;
+
+        MedicalRecord record = new MedicalRecord();
+        record.setDescription(dto.getDescription());
+        record.setIssue(dto.getIssue());
+        record.setDoctorName(dto.getDoctorName());
+        record.setTreatedAt(dto.getTreatedAt());
+        record.setRevisitDate(dto.getRevisitDate());
+
+        if (dto.getMedicines() != null) {
+            List<Medicine> medicines = dto.getMedicines()
+                .stream()
+                .map(MedicineMapper::toEntity)
+                .collect(Collectors.toList());
+
+            medicines.forEach(med -> med.setMedicalRecord(record));  // set back-reference
+            record.setMedicines(medicines);
+        }
+
+        return record;
+    }
+}

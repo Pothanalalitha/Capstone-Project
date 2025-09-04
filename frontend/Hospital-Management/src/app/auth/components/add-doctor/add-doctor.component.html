@@ -1,0 +1,59 @@
+<div class="add-doctor-container">
+  <h2>Add New Doctor</h2>
+
+  <form (ngSubmit)="addDoctor()" #doctorForm="ngForm" novalidate>
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input
+        id="name"
+        name="name"
+        [(ngModel)]="name"
+        required
+        maxlength="100"
+        #nameInput="ngModel"
+      />
+      <div *ngIf="nameInput.invalid && nameInput.touched" class="error">
+        Name is required (max 100 characters).
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="specialty">Specialty</label>
+      <input
+        id="specialty"
+        name="specialty"
+        [(ngModel)]="specialty"
+        required
+        maxlength="100"
+        #specialtyInput="ngModel"
+      />
+      <div *ngIf="specialtyInput.invalid && specialtyInput.touched" class="error">
+        Specialty is required (max 100 characters).
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        id="email"
+        name="email"
+        [(ngModel)]="email"
+        required
+        maxlength="100"
+        type="email"
+        #emailInput="ngModel"
+      />
+      <div *ngIf="emailInput.invalid && emailInput.touched" class="error">
+        Valid email is required (max 100 characters).
+      </div>
+    </div>
+
+    <div *ngIf="errorMsg" class="error general-error">{{ errorMsg }}</div>
+
+    <button type="submit" [disabled]="doctorForm.invalid">Add Doctor</button>
+  </form>
+
+  <div *ngIf="showSuccessPopup" class="popup-success">
+    Doctor added successfully!
+  </div>
+</div>

@@ -1,0 +1,34 @@
+spring.application.name=Audit-Serivce
+server.port = 8087
+
+# Eureka Client Configuration
+eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
+eureka.client.register-with-eureka=true
+eureka.client.fetch-registry=true
+eureka.instance.prefer-ip-address=true
+
+spring.data.mongodb.uri=mongodb://localhost:27017/auditdb
+
+
+# JPA & Hibernate Settings
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+# Logging levels
+logging.level.root=INFO
+logging.level.com.example.patient=DEBUG
+
+# Management / Prometheus
+management.endpoints.web.exposure.include=health,info,prometheus
+management.metrics.export.prometheus.enabled=true
+management.endpoint.prometheus.enabled=true
+
+# Send 100% of traces (adjust between 0.0 - 1.0)
+management.tracing.sampling.probability=1.0
+
+# Zipkin endpoint
+management.zipkin.tracing.endpoint=http://localhost:9411/api/v2/spans
+
+# Prometheus and actuator
+management.endpoints.web.exposure.include=health,info,prometheus
+management.metrics.export.prometheus.enabled=true

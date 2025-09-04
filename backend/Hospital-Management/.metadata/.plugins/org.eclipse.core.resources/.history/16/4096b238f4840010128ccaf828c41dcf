@@ -1,0 +1,43 @@
+package com.example.wipro.lalitha.ServiceImpl;
+
+import java.util.List;
+
+import com.example.wipro.lalitha.Service.UserService;
+import com.example.wipro.lalitha.entites.User;
+
+public class UserServiceImpl implements UserService{
+
+	@Autowired
+	  private UserRepository userRepository;
+	
+	@Override
+	public User addUser(User user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public User updateUser(Long id, User userDetails) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteUser(Long id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<User> getAllUsers() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public User getUserById(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

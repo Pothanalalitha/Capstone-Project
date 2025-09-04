@@ -1,0 +1,19 @@
+package com.example.springs.Service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.springs.Logs.AuditLog;
+import com.example.springs.Repo.AuditLogsRepository;
+
+@Service
+public class AuditLogServiceImpl implements Auditserivce {
+
+    @Autowired
+    private AuditLogsRepository auditLogRepository;
+
+    @Override
+    public AuditLog saveAuditLog(AuditLog auditLog) {
+        return auditLogRepository.save(auditLog);
+    }
+}

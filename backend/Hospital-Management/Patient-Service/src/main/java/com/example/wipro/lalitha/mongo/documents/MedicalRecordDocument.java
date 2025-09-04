@@ -1,0 +1,127 @@
+package com.example.wipro.lalitha.mongo.documents;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Document(collection = "medical_records")
+public class MedicalRecordDocument {
+
+    @Id
+    private String id;  
+
+    private Long patientId;  
+
+    private String description;
+
+    private String issue;
+
+    private String doctorName;
+
+    private LocalDateTime treatedAt;
+    
+    private LocalDate revisitDate;
+
+    private List<MedicineDocument> medicines;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public Long getPatientId() {
+		return patientId;
+	}
+
+	public void setPatientId(Long patientId) {
+		this.patientId = patientId;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getIssue() {
+		return issue;
+	}
+
+	public void setIssue(String issue) {
+		this.issue = issue;
+	}
+
+	public String getDoctorName() {
+		return doctorName;
+	}
+
+	public void setDoctorName(String doctorName) {
+		this.doctorName = doctorName;
+	}
+
+	public LocalDateTime getTreatedAt() {
+		return treatedAt;
+	}
+
+	public void setTreatedAt(LocalDateTime treatedAt) {
+		this.treatedAt = treatedAt;
+	}
+
+	public LocalDate getRevisitDate() {
+		return revisitDate;
+	}
+
+	public void setRevisitDate(LocalDate revisitDate) {
+		this.revisitDate = revisitDate;
+	}
+
+	public List<MedicineDocument> getMedicines() {
+		return medicines;
+	}
+
+	public void setMedicines(List<MedicineDocument> medicines) {
+		this.medicines = medicines;
+	}
+
+	public MedicalRecordDocument() {
+		super();
+	}
+
+	public MedicalRecordDocument(Long patientId, String description, String issue, String doctorName,
+			LocalDateTime treatedAt, LocalDate revisitDate, List<MedicineDocument> medicines) {
+		super();
+		this.patientId = patientId;
+		this.description = description;
+		this.issue = issue;
+		this.doctorName = doctorName;
+		this.treatedAt = treatedAt;
+		this.revisitDate = revisitDate;
+		this.medicines = medicines;
+	}
+
+	@Override
+	public String toString() {
+	    return "MedicalRecordDocument{" +
+	            "id='" + id + '\'' +
+	            ", patientId=" + patientId +
+	            ", description='" + description + '\'' +
+	            ", issue='" + issue + '\'' +
+	            ", doctorName='" + doctorName + '\'' +
+	            ", treatedAt=" + treatedAt +
+	            ", revisitDate=" + revisitDate +
+	            ", medicines=" + medicines +
+	            '}';
+	}
+
+
+   
+ 
+}

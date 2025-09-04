@@ -1,0 +1,63 @@
+package com.example.wipro.lalitha.controller;
+
+
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+
+import jakarta.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.example.wipro.lalitha.dto.DoctorDTO;
+import com.example.wipro.lalitha.services.DoctorService;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/doctors")
+public class DoctorController {
+
+    private static final String DOCTOR_SERVICE_CB = "doctorServiceCB";
+
+    @Autowired
+    private DoctorService doctorService;
+
+    @GetMapping("/getAlldoctors")
+    public ResponseEntity<List<DoctorDTO>> getAllDoctors() {
+        return ResponseEntity.ok(doctorService.getAllDoctors());
+    }
+
+    @GetMapping("/getDoctorById/{id}")
+    public ResponseEntity<DoctorDTO> getDoctor(@PathVariable Long id) {
+        return ResponseEntity.ok(doctorService.getDoctorById(id));
+    }
+
+    @PostMapping("/createDoctor")
+    @CircuitBreaker(name = DOCTOR_SERVICE_CB, fallbackMethod = "fallbackCreateDoctor")
+    public ResponseEntity<DoctorDTO> createDoctor(@Valid @RequestBody DoctorDTO dto) {
+        return ResponseEntity.ok(doctorService.createDoctor(dto));
+    }
+
+    @PutMapping("/updateDoctorById/{id}")
+    @CircuitBreaker(name = DOCTOR_SERVICE_CB, fallbackMethod = "fallbackUpdateDoctor")
+    public ResponseEntity<DoctorDTO> updateDoctor(@PathVariable Long id, @Valid @RequestBody DoctorDTO dto) {
+        return ResponseEntity.ok(doctorService.updateDoctor(id, dto));
+    }
+
+    @DeleteMapping("DeleteDoctorById/{id}")
+    public ResponseEntity<String> deleteDoctor(@PathVariable Long id) {
+        doctorService.deleteDoctor(id);
+        return ResponseEntity.ok("Doctor with id " + id + " deleted successfully");
+    }
+
+    // Fallback methods for circuit breaker
+    public ResponseEntity<DoctorDTO> fallbackCreateDoctor(DoctorDTO dto, Throwable t) {
+        return ResponseEntity.status(503).build();
+    }
+
+    public ResponseEntity<DoctorDTO> fallbackUpdateDoctor(Long id, DoctorDTO dto, Throwable t) {
+        return ResponseEntity.status(503).build();
+    }
+}
+

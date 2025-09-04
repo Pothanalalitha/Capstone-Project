@@ -1,0 +1,13 @@
+package com.example.wipro.lalitha.Service;
+
+import java.util.List;
+
+import com.example.wipro.lalitha.entites.User;
+
+public interface UserService {
+	public User addUser(User user);
+	public User updateUser(Long id, User userDetails);
+	public void deleteUser(Long id);
+	public List<User> getAllUsers();
+	public User getUserById(
+}

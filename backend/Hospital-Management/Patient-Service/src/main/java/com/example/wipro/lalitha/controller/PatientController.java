@@ -1,0 +1,76 @@
+package com.example.wipro.lalitha.controller;
+
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.example.wipro.lalitha.dto.AuditLogDTO;
+import com.example.wipro.lalitha.dto.PatientRequestDTO;
+import com.example.wipro.lalitha.dto.PatientResponseDTO;
+import com.example.wipro.lalitha.feign.AuditServiceClient;
+import com.example.wipro.lalitha.services.PatientService;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/patients")
+@CrossOrigin(origins = "*")
+public class PatientController {
+
+    @Autowired
+    private PatientService patientService;
+    
+    @Autowired
+    private AuditServiceClient auditServiceClient;
+
+    @GetMapping("/getAllPatient")
+    public ResponseEntity<List<PatientResponseDTO>> getAllPatients() {
+    	
+        return ResponseEntity.ok(patientService.getAllPatients());
+    }
+
+    @GetMapping("/getPatientById/{id}")
+    public ResponseEntity<PatientResponseDTO> getPatient(@PathVariable Long id) {
+        var patient = patientService.getPatient(id);
+        if (patient == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(patient);
+    }
+
+    @PostMapping("/createPatient")
+    public ResponseEntity<PatientResponseDTO> createPatient(@RequestParam String userId,@Valid @RequestBody PatientRequestDTO dto) {
+    	AuditLogDTO auditLogDTO = new AuditLogDTO(userId,"CREATE","PATIENT","Created Patient");
+        auditServiceClient.saveAuditLog(auditLogDTO);
+        var patient = patientService.addPatient(dto);
+        if (patient == null) {
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.ok(patient);
+    }
+
+    @PatchMapping("/updatePatientById/{id}")
+    public ResponseEntity<PatientResponseDTO> updatePatient(@RequestParam String userId,@PathVariable Long id, @Valid @RequestBody PatientRequestDTO dto) {
+    	AuditLogDTO auditLogDTO = new AuditLogDTO(userId,"UPDATE","PATIENT","Update Patient");
+        auditServiceClient.saveAuditLog(auditLogDTO);
+        var patient = patientService.updatePatient(id, dto);
+        System.out.println(dto.getAddress());
+        if (patient == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(patient);
+    }
+
+    @DeleteMapping("/deletePatientById/{id}")
+    public ResponseEntity<String> deletePatient(@RequestParam String userId,@PathVariable Long id) {
+    	AuditLogDTO auditLogDTO = new AuditLogDTO(userId,"DELETE","PATIENT","Delete Patient");
+        auditServiceClient.saveAuditLog(auditLogDTO);
+        try {
+            patientService.deletePatient(id);
+            return ResponseEntity.ok("Patient with ID " + id + " successfully deleted.");
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(404).body("Patient with ID " + id + " not found.");
+        }
+    }
+}

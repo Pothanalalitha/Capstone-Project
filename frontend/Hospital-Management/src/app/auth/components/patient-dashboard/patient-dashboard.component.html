@@ -1,0 +1,37 @@
+<div class="patient-dashboard-container">
+  <nav class="sidebar">
+    <ul>
+      <li (click)="selectView('billing')">💳 Billing Details</li>
+      <li (click)="selectView('createAppointment')">📅 Create Appointment</li>
+    </ul>
+  </nav>
+
+  <section class="content">
+    <h2>{{ currentViewTitle }}</h2>
+
+    <table *ngIf="currentView === 'billing'">
+      <thead>
+        <tr>
+          <th>Invoice ID</th>
+          <th>Appointment ID</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Created At</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let bill of bills">
+          <td>{{ bill.id }}</td>
+          <td>{{ bill.appointmentId }}</td>
+          <td>{{ bill.amount }}</td>
+          <td>{{ bill.status }}</td>
+          <td>{{ bill.createdAt | date:'medium' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="currentView === 'createAppointment'">
+      <app-add-appointment></app-add-appointment>
+    </div>
+  </section>
+</div>

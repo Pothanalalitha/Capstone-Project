@@ -1,0 +1,118 @@
+package com.example.wipro.lalitha.service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.wipro.lalitha.dto.AppointmentDTO;
+import com.example.wipro.lalitha.dto.InvoiceDTO;
+import com.example.wipro.lalitha.dto.PatientDTO;
+import com.example.wipro.lalitha.entity.Invoice;
+import com.example.wipro.lalitha.exception.BillingException;
+import com.example.wipro.lalitha.feign.AppointmentServiceClient;
+import com.example.wipro.lalitha.feign.PatientServiceClient;
+import com.example.wipro.lalitha.repository.InvoiceRepository;
+
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+
+@Service
+public class BillingServiceImpl implements BillingService {
+
+    private static final Logger logger = LoggerFactory.getLogger(BillingServiceImpl.class);
+
+    @Autowired
+    private InvoiceRepository invoiceRepository;
+
+    @Autowired
+    private PatientServiceClient patientServiceClient;
+
+    @Autowired
+    private AppointmentServiceClient appointmentServiceClient;
+
+    @Override
+    @CircuitBreaker(name = "billingServiceCB", fallbackMethod = "billingFallback")
+    public void processAppointmentEvent(InvoiceDTO invoiceDTO) {
+        try {
+            PatientDTO patient = patientServiceClient.getPatientById(invoiceDTO.getPatientId());
+            if (patient == null) {
+                throw new BillingException("Invalid patientId: " + invoiceDTO.getPatientId());
+            }
+
+            AppointmentDTO appointment = appointmentServiceClient.getAppointmentById(invoiceDTO.getAppointmentId());
+            if (appointment == null) {
+                throw new BillingException("Invalid appointmentId: " + invoiceDTO.getAppointmentId());
+            }
+
+            invoiceDTO.setAmount(calculateAmount(invoiceDTO, patient, appointment));
+            invoiceDTO.setStatus("PENDING");
+            Invoice invoice = mapDtoToEntity(invoiceDTO);
+
+            invoiceRepository.save(invoice);
+
+            logger.info("Invoice created for appointment {}", invoiceDTO.getAppointmentId());
+        } catch (Exception e) {
+            logger.error("Error processing billing for appointment: " + invoiceDTO.getAppointmentId(), e);
+            throw e;
+        }
+    }
+
+    private double calculateAmount(InvoiceDTO invoiceDTO, PatientDTO patient, AppointmentDTO appointment) {
+        // Implement your custom billing logic here
+        return 1000.00; // Placeholder amount
+    }
+
+    private Invoice mapDtoToEntity(InvoiceDTO dto) {
+        Invoice invoice = new Invoice();
+        invoice.setAppointmentId(dto.getAppointmentId());
+        invoice.setPatientId(dto.getPatientId());
+        invoice.setAmount(dto.getAmount());
+        invoice.setStatus(dto.getStatus());
+        invoice.setCreatedAt(LocalDateTime.now());
+        invoice.setUpdatedAt(LocalDateTime.now());
+        return invoice;
+    }
+
+    @Override
+    public InvoiceDTO createInvoice(InvoiceDTO invoiceDTO) {
+        // Validate patient and appointment IDs before creating invoice
+        PatientDTO patient = patientServiceClient.getPatientById(invoiceDTO.getPatientId());
+        if (patient == null) {
+            throw new BillingException("Invalid patientId: " + invoiceDTO.getPatientId());
+        }
+        AppointmentDTO appointment = appointmentServiceClient.getAppointmentById(invoiceDTO.getAppointmentId());
+        if (appointment == null) {
+            throw new BillingException("Invalid appointmentId: " + invoiceDTO.getAppointmentId());
+        }
+
+        Invoice invoice = mapDtoToEntity(invoiceDTO);
+        Invoice saved = invoiceRepository.save(invoice);
+        return mapEntityToDto(saved);
+    }
+
+    @Override
+    public List<InvoiceDTO> getAllInvoices() {
+        return invoiceRepository.findAll().stream()
+                .map(this::mapEntityToDto)
+                .collect(Collectors.toList());
+    }
+
+    private InvoiceDTO mapEntityToDto(Invoice invoice) {
+        InvoiceDTO dto = new InvoiceDTO();
+        dto.setId(invoice.getId());
+        dto.setAppointmentId(invoice.getAppointmentId());
+        dto.setPatientId(invoice.getPatientId());
+        dto.setAmount(invoice.getAmount());
+        dto.setStatus(invoice.getStatus());
+        return dto;
+    }
+
+    public void billingFallback(InvoiceDTO invoiceDTO, Throwable t) {
+        logger.error("Fallback billing for appointment id {} due to {}", invoiceDTO.getAppointmentId(), t.toString());
+        // You can add fallback logic here if needed
+    }
+}

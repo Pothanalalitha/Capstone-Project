@@ -1,0 +1,46 @@
+package com.example.wipro.lalitha.mapper;
+
+import java.util.stream.Collectors;
+
+import com.example.wipro.lalitha.dto.PatientRequestDTO;
+import com.example.wipro.lalitha.dto.PatientResponseDTO;
+import com.example.wipro.lalitha.entites.MedicalRecord;
+import com.example.wipro.lalitha.entites.Patient;
+
+public class PatientMapper {
+
+    public static Patient toEntity(PatientRequestDTO dto) {
+        Patient patient = new Patient();
+        patient.setName(dto.getName());
+        patient.setAddress(dto.getAddress());
+        patient.setGender(dto.getGender());
+        patient.setDob(dto.getDob());
+        patient.setWeight(dto.getWeight());
+        patient.setHeight(dto.getHeight());
+
+        if (dto.getMedicalRecords() != null) {
+            var records = dto.getMedicalRecords().stream()
+                .map(recordDto -> {
+                    MedicalRecord record = MedicalRecordMapper.toEntity(recordDto);
+                    record.setPatient(patient);
+                    return record;
+                })
+                .collect(Collectors.toList());
+            patient.setMedicalRecords(records);
+        }
+
+        return patient;
+    }
+
+    public static PatientResponseDTO toDTO(Patient patient) {
+        PatientResponseDTO dto = new PatientResponseDTO();
+        dto.setId(patient.getId());
+        dto.setName(patient.getName());
+        dto.setAddress(patient.getAddress());
+        dto.setGender(patient.getGender());
+        dto.setDob(patient.getDob());
+        dto.setWeight(patient.getWeight());
+        dto.setHeight(patient.getHeight());
+        return dto;
+    }
+}

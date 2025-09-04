@@ -1,0 +1,18 @@
+package com.example.wipro.lalitha.mapper;
+
+import com.example.wipro.lalitha.dto.MedicineDTO;
+import com.example.wipro.lalitha.entites.Medicine;
+
+public class MedicineMapper {
+
+    public static MedicineDTO toDTO(Medicine medicine) {
+        if (medicine == null) return null;
+        MedicineDTO dto = new MedicineDTO();
+        dto.setId(medicine.getId());
+        dto.setName(medicine.getName());
+        dto.setQuantity(medicine.getQuantity());
+        dto.setTime(medicine.getTime());
+        return dto;
+    }
+}
+

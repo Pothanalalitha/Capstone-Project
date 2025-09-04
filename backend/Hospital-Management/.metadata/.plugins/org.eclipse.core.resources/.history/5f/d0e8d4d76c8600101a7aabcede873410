@@ -1,0 +1,13 @@
+package com.example.springs.Service;
+
+@Service
+public class AuditLogServiceImpl implements Auditserivce {
+
+    @Autowired
+    private AuditLogsRepository auditLogRepository;
+
+    @Override
+    public AuditLog saveAuditLog(AuditLog auditLog) {
+        return auditLogRepository.save(auditLog);
+    }
+}

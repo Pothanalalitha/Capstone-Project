@@ -1,0 +1,71 @@
+package com.example.wipro.lalitha.dto;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
+public class MedicalRecordDTO {
+    private Long id;
+    private String description;
+    private String issue;
+    private String doctorName;
+    private LocalDateTime treatedAt;
+    private LocalDate revisitDate;
+    private List<MedicineDTO> medicines;
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getIssue() {
+		return issue;
+	}
+	public void setIssue(String issue) {
+		this.issue = issue;
+	}
+	public String getDoctorName() {
+		return doctorName;
+	}
+	public void setDoctorName(String doctorName) {
+		this.doctorName = doctorName;
+	}
+	public LocalDateTime getTreatedAt() {
+		return treatedAt;
+	}
+	public void setTreatedAt(LocalDateTime treatedAt) {
+		this.treatedAt = treatedAt;
+	}
+	public LocalDate getRevisitDate() {
+		return revisitDate;
+	}
+	public void setRevisitDate(LocalDate revisitDate) {
+		this.revisitDate = revisitDate;
+	}
+	public List<MedicineDTO> getMedicines() {
+		return medicines;
+	}
+	public void setMedicines(List<MedicineDTO> medicines) {
+		this.medicines = medicines;
+	}
+	public MedicalRecordDTO() {
+		super();
+	}
+	public MedicalRecordDTO(String description, String issue, String doctorName, LocalDateTime treatedAt,
+			LocalDate revisitDate, List<MedicineDTO> medicines) {
+		super();
+		this.description = description;
+		this.issue = issue;
+		this.doctorName = doctorName;
+		this.treatedAt = treatedAt;
+		this.revisitDate = revisitDate;
+		this.medicines = medicines;
+	}
+    
+}

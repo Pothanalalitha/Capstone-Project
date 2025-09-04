@@ -1,0 +1,50 @@
+<div class="doctor-dashboard-container">
+  <nav class="sidebar">
+    <ul>
+      <li (click)="selectView('patients')">👥 View Patients</li>
+      <li (click)="selectView('appointments')">📅 View Appointments</li>
+    </ul>
+  </nav>
+
+  <section class="content">
+    <h2>{{ currentViewTitle }}</h2>
+
+    <table *ngIf="currentView === 'patients'">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Gender</th>
+          <th>DOB</th>
+          <th>Weight</th>
+          <th>Height</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let patient of patients">
+          <td>{{ patient.name }}</td>
+          <td>{{ patient.gender }}</td>
+          <td>{{ patient.dob | date:'yyyy-MM-dd' }}</td>
+          <td>{{ patient.weight }}</td>
+          <td>{{ patient.height }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table *ngIf="currentView === 'appointments'">
+      <thead>
+        <tr>
+          <th>Patient ID</th>
+          <th>Appointment Time</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let appointment of appointments">
+          <td>{{ appointment.patientId }}</td>
+          <td>{{ appointment.appointmentTime | date:'medium' }}</td>
+          <td>{{ appointment.status }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</div>

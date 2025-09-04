@@ -1,0 +1,76 @@
+package com.example.wipro.lalitha.mapper;
+
+import com.example.wipro.lalitha.dto.MedicalRecordDTO;
+import com.example.wipro.lalitha.dto.MedicineDTO;
+import com.example.wipro.lalitha.mongo.documents.MedicalRecordDocument;
+import com.example.wipro.lalitha.mongo.documents.MedicineDocument;
+
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+public class MedicalRecordMapper {
+
+    public static MedicalRecordDTO toDTO(MedicalRecordDocument doc) {
+        if (doc == null) return null;
+        MedicalRecordDTO dto = new MedicalRecordDTO();
+        dto.setId(doc.getId());
+        dto.setPatientId(doc.getPatientId());
+        dto.setDescription(doc.getDescription());
+        dto.setIssue(doc.getIssue());
+        dto.setDoctorName(doc.getDoctorName());
+        dto.setTreatedAt(doc.getTreatedAt());
+        dto.setRevisitDate(doc.getRevisitDate());
+        dto.setMedicines(doc.getMedicines() == null ? null :
+            doc.getMedicines().stream()
+                .map(MedicalRecordMapper::toMedicineDTO)
+                .collect(Collectors.toList())
+        );
+        return dto;
+    }
+
+    public static MedicalRecordDocument toDocument(MedicalRecordDTO dto) {
+        if (dto == null) return null;
+        MedicalRecordDocument doc = new MedicalRecordDocument();
+        if (dto.getId() != null) {
+            doc.setId(dto.getId());
+        }
+        doc.setPatientId(dto.getPatientId());
+        doc.setDescription(dto.getDescription());
+        doc.setIssue(dto.getIssue());
+        doc.setDoctorName(dto.getDoctorName());
+        doc.setTreatedAt(dto.getTreatedAt());
+        doc.setRevisitDate(dto.getRevisitDate());
+        doc.setMedicines(dto.getMedicines() == null ? null :
+            dto.getMedicines().stream()
+                .map(MedicalRecordMapper::toMedicineDocument)
+                .collect(Collectors.toList())
+        );
+        return doc;
+    }
+
+    private static MedicineDTO toMedicineDTO(MedicineDocument md) {
+        if (md == null) return null;
+        MedicineDTO dto = new MedicineDTO();
+        dto.setId(md.getId());
+        dto.setName(md.getName());
+        dto.setQuantity(md.getQuantity());
+        dto.setTime(md.getTime());
+        return dto;
+    }
+
+    private static MedicineDocument toMedicineDocument(MedicineDTO dto) {
+        if (dto == null) return null;
+        MedicineDocument md = new MedicineDocument();
+        // Generate UUID if id is null to avoid null ids
+        if (dto.getId() == null) {
+            md.setId(UUID.randomUUID().toString());
+        } else {
+            md.setId(dto.getId());
+        }
+        md.setName(dto.getName());
+        md.setQuantity(dto.getQuantity());
+        md.setTime(dto.getTime());
+        return md;
+    }
+}

@@ -1,0 +1,5 @@
+package com.example.wipro.lalitha.feign;
+
+public interface AuditServiceClient {
+
+}

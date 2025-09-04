@@ -1,0 +1,15 @@
+package com.example.wipro.lalitha.feign;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import com.example.wipro.lalitha.dto.DoctorDTO;
+
+@FeignClient(name = "doctor-service")
+public interface DoctorServiceClient {
+
+    @GetMapping("/api/doctors/getDoctorById/{id}")
+    DoctorDTO getDoctorById(@PathVariable("id") Long id);
+}
+

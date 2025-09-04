@@ -1,0 +1,33 @@
+<header>
+  <div class="header-bar">
+    <div class="header-title">
+      <h1>Hospital Management System</h1>
+    </div>
+    <nav>
+      <a *ngIf="!isLoggedIn" routerLink="/register" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Register</a>
+      <a *ngIf="!isLoggedIn" routerLink="/login" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Login</a>
+      <a *ngIf="isLoggedIn && userRole === 'Admin'" routerLink="/update-user" routerLinkActive="active">Update</a>
+      <a *ngIf="isLoggedIn && userRole === 'Admin'" routerLink="/users" routerLinkActive="active">Users</a>
+      <!-- Removed Profile Link as requested -->
+      <a *ngIf="isLoggedIn" (click)="onLogout()" style="cursor:pointer">Logout</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Popup message for logout -->
+<div *ngIf="showLogoutPopup" class="logout-popup" style="position: fixed; top: 10px; right: 10px; background: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 15px; border-radius: 5px; z-index: 1000;">
+  Logged out successfully
+</div>
+
+<!-- Popup message for login success -->
+<div *ngIf="showLoginPopup" class="login-popup" style="position: fixed; top: 10px; right: 10px; background: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; padding: 15px; border-radius: 5px; z-index: 1000;">
+  Logged in successfully!
+</div>
+
+<main>
+  <router-outlet></router-outlet>
+</main>
+
+<footer>
+  <p>© 2025 SmartCare Hospital Management System</p>
+</footer>

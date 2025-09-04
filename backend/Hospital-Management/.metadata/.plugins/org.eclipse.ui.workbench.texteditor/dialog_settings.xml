@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="java.lang.Class">
+		<item key="selection" value="PatientResponseDTO"/>
+		<list key="findhistory">
+			<item value="PatientResponseDTO"/>
+			<item value="ResponseEntity"/>
+		</list>
+	</section>
+</section>

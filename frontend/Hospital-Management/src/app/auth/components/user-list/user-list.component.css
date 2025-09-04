@@ -1,0 +1,47 @@
+.user-list-container {
+  max-width: 600px;
+  margin: 40px auto;
+  font-family: Arial, sans-serif;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.user-table th,
+.user-table td {
+  border: 1px solid #ddd;
+  padding: 12px 8px;
+  text-align: left;
+}
+
+.user-table th {
+  background-color: #f5f5f5;
+  font-weight: 700;
+}
+
+.delete-button {
+  background-color: #e53935;
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background-color: #c62828;
+}
+
+.error-message {
+  color: #e53935;
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: 600;
+}

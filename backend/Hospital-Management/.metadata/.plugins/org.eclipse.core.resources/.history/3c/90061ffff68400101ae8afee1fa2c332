@@ -1,0 +1,47 @@
+package com.example.wipro.lalitha.ServiceImpl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.example.wipro.lalitha.Service.UserService;
+import com.example.wipro.lalitha.entites.User;
+import com.example.wipro.lalitha.repositories.UserRepo;
+
+public class UserServiceImpl implements UserService{
+
+	@Autowired
+	private UserRepo userRepository;
+	
+	@Override
+	 public User addUser(User user) {
+	    return userRepository.save(user);
+	  }
+
+	@Override
+	 public User updateUser(Long id, User userDetails) {
+	    User existingUser = userRepository.findById(id)
+	      .orElseThrow(() -> new RuntimeException("User not found"));
+	    existingUser.setEmail(userDetails.getEmail());
+	    existingUser.setPassword(userDetails.getPassword());
+	    existingUser.setRole(userDetails.getRole());
+	    return userRepository.save(existingUser);
+	  }
+
+	@Override
+	public void deleteUser(Long id) {
+	    userRepository.deleteById(id);
+	  }
+
+	@Override
+	public List<User> getAllUsers() {
+	    return userRepository.findAll();
+	  }
+
+	@Override
+	 public User getUserById(Long id){
+	    return userRepository.findById(id)
+	        .orElseThrow(() -> new RuntimeException("User not found"));
+	  }
+
+}

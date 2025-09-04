@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<typeInfoHistroy>
+    <typeInfo handle="=Patient-Service/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;com.example.wipro.lalitha.services{PatientService.java[PatientService" modifiers="513" timestamp="1756568653977"/>
+    <typeInfo handle="=Appointment-Service/C:\/Users\/Gnaneshwar\/.m2\/repository\/org\/hibernate\/orm\/hibernate-core\/6.6.26.Final\/hibernate-core-6.6.26.Final.jar=/maven.pomderived=/true=/=/maven.groupId=/org.hibernate.orm=/=/maven.artifactId=/hibernate-core=/=/maven.version=/6.6.26.Final=/=/maven.scope=/compile=/=/maven.pomderived=/true=/&lt;org.hibernate.query.criteria(JpaQueryPart.class[JpaQueryPart" modifiers="1537" timestamp="1756004153441"/>
+    <typeInfo handle="=Appointment-Service/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;com.example.wipro.lalitha.services{AppointmentService.java[AppointmentService" modifiers="513" timestamp="1756628661395"/>
+    <typeInfo handle="=Billing-Service/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;com.example.wipro.lalitha.service{BillingService.java[BillingService" modifiers="513" timestamp="1756636639089"/>
+    <typeInfo handle="=Appointment-Service/C:\/Users\/Gnaneshwar\/.m2\/repository\/org\/springframework\/data\/spring-data-jpa\/3.5.3\/spring-data-jpa-3.5.3.jar=/maven.pomderived=/true=/=/maven.groupId=/org.springframework.data=/=/maven.artifactId=/spring-data-jpa=/=/maven.version=/3.5.3=/=/maven.scope=/compile=/=/maven.pomderived=/true=/&lt;org.springframework.data.jpa.repository(JpaRepository.class[JpaRepository" modifiers="1537" timestamp="1756004150876"/>
+    <typeInfo handle="=Notification-Service/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;com.example.wipro.lalitha.service{NotificationService.java[NotificationService" modifiers="513" timestamp="1756642994398"/>
+</typeInfoHistroy>

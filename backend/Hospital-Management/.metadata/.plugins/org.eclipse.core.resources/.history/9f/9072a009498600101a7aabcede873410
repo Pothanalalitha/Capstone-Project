@@ -1,0 +1,85 @@
+package com.example.wipro.lalitha.services;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Service;
+
+import com.example.wipro.lalitha.dto.AppointmentDTO;
+import com.example.wipro.lalitha.entities.Appointment;
+import com.example.wipro.lalitha.exception.ResourceNotFoundException;
+import com.example.wipro.lalitha.mapper.AppointmentMapper;
+import com.example.wipro.lalitha.repositories.AppointmentRepository;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class AppointmentServiceImpl implements AppointmentService {
+
+    private static final String APPOINTMENT_TOPIC = "appointment-events";
+
+    @Autowired
+    private AppointmentRepository appointmentRepository;
+
+    @Autowired
+    private KafkaTemplate<String, AppointmentDTO> kafkaTemplate;
+
+    @Override
+    public AppointmentDTO createAppointment(AppointmentDTO dto) {
+        Appointment appointment = AppointmentMapper.toEntity(dto);
+        Appointment saved = appointmentRepository.save(appointment);
+        AppointmentDTO savedDto = AppointmentMapper.toDTO(saved);
+        kafkaTemplate.send(APPOINTMENT_TOPIC, savedDto);
+        return savedDto;
+    }
+
+    @Override
+    public AppointmentDTO updateAppointment(Long id, AppointmentDTO dto) {
+        Appointment appointment = appointmentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment not found with id " + id));
+        appointment.setPatientId(dto.getPatientId());
+        appointment.setDoctorId(dto.getDoctorId());
+        appointment.setAppointmentTime(dto.getAppointmentTime());
+        appointment.setStatus(dto.getStatus());
+        Appointment updated = appointmentRepository.save(appointment);
+        AppointmentDTO updatedDto = AppointmentMapper.toDTO(updated);
+        kafkaTemplate.send(APPOINTMENT_TOPIC, updatedDto);
+        return updatedDto;
+    }
+
+    @Override
+    public AppointmentDTO getAppointmentById(Long id) {
+        Appointment appointment = appointmentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment not found with id " + id));
+        return AppointmentMapper.toDTO(appointment);
+    }
+
+    @Override
+    public List<AppointmentDTO> getAppointmentsByDoctorId(Long doctorId) {
+        return appointmentRepository.findByDoctorId(doctorId).stream()
+                .map(AppointmentMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AppointmentDTO> getAppointmentsByPatientId(Long patientId) {
+        return appointmentRepository.findByPatientId(patientId).stream()
+                .map(AppointmentMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    // Added method to get all appointments
+    @Override
+    public List<AppointmentDTO> getAllAppointments() {
+        return appointmentRepository.findAll().stream()
+                .map(AppointmentMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteAppointment(Long id) {
+        Appointment appointment = appointmentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment not found with id " + id));
+        appointmentRepository.delete(appointment);
+    }
+}

@@ -1,0 +1,51 @@
+package com.example.wipro.lalitha.Controller;
+
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.wipro.lalitha.Service.UserService;
+import com.example.wipro.lalitha.entites.User;
+
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+	
+	@Autowired
+	  private UserService userService;
+	
+	@PostMapping
+	  public User addUser(@RequestBody User user) {
+	    User savedUser = userService.addUser(user);
+	    savedUser.setPassword(null); // Hide password in response
+	    return savedUser;
+	  }
+
+	  @PutMapping("/{id}")
+	  public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
+	    User updatedUser = userService.updateUser(id, user);
+	    updatedUser.setPassword(null);
+	    return ResponseEntity.ok(updatedUser);
+	  }
+
+	  @DeleteMapping("/{id}")
+	  public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+	    userService.deleteUser(id);
+	    return ResponseEntity.noContent().build();
+	  }
+
+	  @GetMapping
+	  public ResponseEntity<List<User>> getAllUsers() {
+	    List<User> users = userService.getAllUsers();
+	    users.forEach(u -> u.setPassword(null));
+	    return ResponseEntity.ok(users);
+	  }
+
+	  @GetMapping("/{id}")
+	  public ResponseEntity<User> getUserById(@PathVariable Long id) {
+	    User user = userService.getUserById(id);
+	    user.setPassword(null);
+	    return ResponseEntity.ok(user);
+	  }
+
+}

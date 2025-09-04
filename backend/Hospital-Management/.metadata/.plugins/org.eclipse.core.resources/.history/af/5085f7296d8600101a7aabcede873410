@@ -1,0 +1,20 @@
+package com.example.springs.Controller;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/auditlogs")
+public class AuditLogController {
+
+    @Autowired
+    private Auditserivce auditLogService;
+
+    @PostMapping("/save")
+    public ResponseEntity<AuditLog> saveAuditLog(@RequestBody AuditLog auditLog) {
+        AuditLog savedLog = auditLogService.saveAuditLog(auditLog);
+        return ResponseEntity.ok(savedLog);
+    }
+}

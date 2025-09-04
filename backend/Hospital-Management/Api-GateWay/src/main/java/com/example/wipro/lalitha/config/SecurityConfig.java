@@ -1,0 +1,21 @@
+package com.example.wipro.lalitha.config;
+
+import com.example.wipro.lalitha.filter.JwtAuthenticationFilter;
+import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class SecurityConfig {
+
+    private final JwtAuthenticationFilter jwtFilter;
+
+    public SecurityConfig(JwtAuthenticationFilter jwtFilter) {
+        this.jwtFilter = jwtFilter;
+    }
+
+    @Bean
+    public GlobalFilter globalFilter() {
+        return jwtFilter;  
+    }
+}

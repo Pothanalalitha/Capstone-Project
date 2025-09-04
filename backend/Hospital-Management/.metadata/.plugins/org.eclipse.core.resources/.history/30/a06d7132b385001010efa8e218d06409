@@ -1,0 +1,64 @@
+package com.example.wipro.lalitha.controller;
+
+
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.example.wipro.lalitha.dto.PatientRequestDTO;
+import com.example.wipro.lalitha.dto.PatientResponseDTO;
+import com.example.wipro.lalitha.services.PatientService;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/patients")
+public class PatientController {
+
+    @Autowired
+    private PatientService patientService;
+
+    @GetMapping
+    public ResponseEntity<List<PatientResponseDTO>> getAllPatients() {
+        return ResponseEntity.ok(patientService.getAllPatients());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PatientResponseDTO> getPatient(@PathVariable Long id) {
+        var patient = patientService.getPatient(id);
+        if (patient == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(patient);
+    }
+
+    @PostMapping
+    public ResponseEntity<PatientResponseDTO> createPatient(@Valid @RequestBody PatientRequestDTO dto) {
+        var patient = patientService.addPatient(dto);
+        if (patient == null) {
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.ok(patient);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PatientResponseDTO> updatePatient(@PathVariable Long id, @Valid @RequestBody PatientRequestDTO dto) {
+        var patient = patientService.updatePatient(id, dto);
+        if (patient == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(patient);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePatient(@PathVariable Long id) {
+        try {
+            patientService.deletePatient(id);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+}
+

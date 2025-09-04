@@ -1,0 +1,156 @@
+package com.example.wipro.lalitha.services;
+
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.wipro.lalitha.dto.MedicalRecordDTO;
+import com.example.wipro.lalitha.dto.PatientRequestDTO;
+import com.example.wipro.lalitha.dto.PatientResponseDTO;
+import com.example.wipro.lalitha.entites.Patient;
+import com.example.wipro.lalitha.logger.ServiceLogger;
+import com.example.wipro.lalitha.mapper.MedicalRecordMapper;
+import com.example.wipro.lalitha.mapper.PatientMapper;
+import com.example.wipro.lalitha.mongo.documents.MedicalRecordDocument;
+import com.example.wipro.lalitha.mongo.repositories.MedicalRecordMongoRepository;
+import com.example.wipro.lalitha.repositories.PatientRepository;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class PatientServiceImpl implements PatientService {
+
+    private static final String PATIENT_SERVICE_CB = "patientService";
+
+    @Autowired
+    private PatientRepository patientRepository;
+
+    @Autowired
+    private MedicalRecordMongoRepository medicalRecordMongoRepository;
+
+    @Override
+    @CircuitBreaker(name = PATIENT_SERVICE_CB, fallbackMethod = "fallbackGetAllPatients")
+    public List<PatientResponseDTO> getAllPatients() {
+        ServiceLogger.info("Fetching all patients");
+        List<Patient> patients = patientRepository.findAll();
+
+        List<PatientResponseDTO> result = patients.stream()
+            .map(patient -> {
+                PatientResponseDTO dto = PatientMapper.toDTO(patient);
+                // Find medical records for this patient
+                List<MedicalRecordDocument> medicalRecordDocs = medicalRecordMongoRepository.findByPatientId(patient.getId());
+                List<MedicalRecordDTO> medicalRecords = medicalRecordDocs.stream()
+                    .map(MedicalRecordMapper::toDTO)
+                    .collect(Collectors.toList());
+                dto.setMedicalRecords(medicalRecords);
+                return dto;
+            })
+            .collect(Collectors.toList());
+
+        return result;
+    }
+
+
+    public List<PatientResponseDTO> fallbackGetAllPatients(Throwable t) {
+        ServiceLogger.error("Fallback triggered for getAllPatients: " + t.getMessage());
+        return List.of();
+    }
+
+    @Override
+    @CircuitBreaker(name = PATIENT_SERVICE_CB, fallbackMethod = "fallbackGetPatient")
+    public PatientResponseDTO getPatient(Long id) {
+        ServiceLogger.info("Fetching patient with ID: " + id);
+        Patient patient = patientRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Patient not found"));
+
+        PatientResponseDTO dto = PatientMapper.toDTO(patient);
+
+        List<MedicalRecordDocument> medicalRecordDocs = medicalRecordMongoRepository.findByPatientId(id);
+        List<MedicalRecordDTO> medicalRecords = medicalRecordDocs.stream()
+                .map(MedicalRecordMapper::toDTO)
+                .collect(Collectors.toList());
+
+        dto.setMedicalRecords(medicalRecords);
+        return dto;
+    }
+
+    public PatientResponseDTO fallbackGetPatient(Long id, Throwable t) {
+        ServiceLogger.error("Fallback triggered for getPatient " + id + ": " + t.getMessage());
+        return null;
+    }
+
+    @Override
+    @CircuitBreaker(name = PATIENT_SERVICE_CB, fallbackMethod = "fallbackAddPatient")
+    public PatientResponseDTO addPatient(PatientRequestDTO dto) {
+        ServiceLogger.info("Adding patient: " + dto.getName());
+        final Patient patient = patientRepository.save(PatientMapper.toEntity(dto));
+		/*
+		 * List<MedicalRecordDocument> patientMedRec = new
+		 * ArrayList<MedicalRecordDocument>(); if (dto.getMedicalRecords() != null) {
+		 * List<MedicalRecordDocument> records = dto.getMedicalRecords().stream()
+		 * .map(recordDto -> { recordDto.setPatientId(patient.getId()); return
+		 * MedicalRecordMapper.toDocument(recordDto); }) .collect(Collectors.toList());
+		 * patientMedRec = medicalRecordMongoRepository.saveAll(records); }
+		 * PatientResponseDTO patientRes = PatientMapper.toDTO(patient);
+		 * if(patientMedRec!=null) patientRes.setMedicalRecords(patientMedRec);
+		 */
+        return patientRes;
+    }
+
+    public PatientResponseDTO fallbackAddPatient(PatientRequestDTO dto, Throwable t) {
+        ServiceLogger.error("Fallback triggered for addPatient: " + t.getMessage());
+        return null;
+    }
+
+    @Override
+    @CircuitBreaker(name = PATIENT_SERVICE_CB, fallbackMethod = "fallbackUpdatePatient")
+    public PatientResponseDTO updatePatient(Long id, PatientRequestDTO dto) {
+        ServiceLogger.info("Updating patient with ID: " + id);
+        Patient patient = patientRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Patient not found"));
+        patient.setName(dto.getName());
+        patient.setAddress(dto.getAddress());
+        patient.setGender(dto.getGender());
+        patient.setDob(dto.getDob());
+        patient.setWeight(dto.getWeight());
+        patient.setHeight(dto.getHeight());
+        patient = patientRepository.save(patient);
+
+        if (dto.getMedicalRecords() != null) {
+            List<MedicalRecordDocument> existingRecords = medicalRecordMongoRepository.findByPatientId(id);
+            medicalRecordMongoRepository.deleteAll(existingRecords);
+
+            List<MedicalRecordDocument> newRecords = dto.getMedicalRecords().stream()
+                    .map(recordDto -> {
+                        recordDto.setPatientId(id);
+                        return MedicalRecordMapper.toDocument(recordDto);
+                    })
+                    .collect(Collectors.toList());
+            medicalRecordMongoRepository.saveAll(newRecords);
+        }
+        return PatientMapper.toDTO(patient);
+    }
+
+    public PatientResponseDTO fallbackUpdatePatient(Long id, PatientRequestDTO dto, Throwable t) {
+        ServiceLogger.error("Fallback triggered for updatePatient " + id + ": " + t.getMessage());
+        return null;
+    }
+
+    @Override
+    @CircuitBreaker(name = PATIENT_SERVICE_CB, fallbackMethod = "fallbackDeletePatient")
+    public void deletePatient(Long id) {
+        ServiceLogger.info("Deleting patient with ID: " + id);
+        if (!patientRepository.existsById(id)) {
+            throw new RuntimeException("Patient not found");
+        }
+        List<MedicalRecordDocument> records = medicalRecordMongoRepository.findByPatientId(id);
+        medicalRecordMongoRepository.deleteAll(records);
+        patientRepository.deleteById(id);
+    }
+
+    public void fallbackDeletePatient(Long id, Throwable t) {
+        ServiceLogger.error("Fallback triggered for deletePatient " + id + ": " + t.getMessage());
+    }
+}

@@ -1,0 +1,23 @@
+package com.example.springs.Controller;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import com.example.springs.Logs.AuditLog;
+import com.example.springs.Service.Auditserivce;
+
+@RestController
+@RequestMapping("/api/auditlogs")
+public class AuditLogController {
+
+    @Autowired
+    private Auditserivce auditLogService;
+
+    @PostMapping("/save")
+    public AuditLog saveAuditLog(@RequestBody AuditLog auditLog) {
+    	System.out.println("value > "+auditLog.getAction());
+        AuditLog savedLog = auditLogService.saveAuditLog(auditLog);
+        return savedLog;
+    }
+}

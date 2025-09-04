@@ -1,0 +1,5 @@
+package com.example.springs.Service;
+
+public interface  Auditserivce {
+	AuditLog saveAuditLog(AuditLog auditLog);
+}
